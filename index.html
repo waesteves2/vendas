@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Vendas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff007f, #ff004f);
+            color: #ffffff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ff004f;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff007f;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #e6006c;
+            transform: scale(1.02);
+        }
+
+        button:active {
+            background-color: #c60055;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            input[type="text"],
+            input[type="number"] {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar Venda</h1>
+        <form id="sales-form">
+            <label for="seller">Vendedor:</label>
+            <input type="text" id="seller" name="seller" required>
+
+            <label for="product">Produto:</label>
+            <input type="text" id="product" name="product" required>
+
+            <label for="quantity">Quantidade:</label>
+            <input type="number" id="quantity" name="quantity" required>
+
+            <label for="price">Preço:</label>
+            <input type="number" id="price" name="price" required>
+
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('sales-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const data = {
+    seller: document.getElementById('seller').value,
+    product: document.getElementById('product').value,
+    quantity: Number(document.getElementById('quantity').value),
+    price: Number(document.getElementById('price').value)
+};
+
+
+            fetch('http://127.0.0.1:5000/register_sale', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message || 'Venda registrada com sucesso!');
+                document.getElementById('sales-form').reset();
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                alert('Erro ao registrar venda. Consulte o console para mais detalhes.');
+            });
+        });
+    </script>
+</body>
+</html>
